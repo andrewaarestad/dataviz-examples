@@ -1,101 +1,87 @@
 import Image from "next/image";
+import Dashboard from "./dashboard";
+import { MetricData } from "@/types/metric-data";
+
+
+const generateMetricData = (
+  name: string,
+  startDate: Date,
+  endDate: Date,
+  baseValue: number,
+  volatility: number,
+  isInteger: boolean = false
+): MetricData[] => {
+  const data: MetricData[] = [];
+  const currentDate = new Date(startDate);
+  
+  while (currentDate <= endDate) {
+    // Add some random variation to make data look realistic
+    const randomFactor = 1 + (Math.random() - 0.5) * volatility;
+    let value = baseValue * randomFactor;
+    
+    // Round to integer if specified
+    if (isInteger) {
+      value = Math.round(value);
+    } else {
+      value = Number(value.toFixed(2));
+    }
+    
+    data.push({
+      timestamp: new Date(currentDate).toISOString(),
+      value,
+      name,
+    });
+    
+    // Increment by 1 hour for more granular data
+    currentDate.setHours(currentDate.getHours() + 1);
+  }
+  
+  return data;
+};
+
+// Generate 3 months of data
+const endDate = new Date();
+const startDate = new Date(endDate);
+startDate.setMonth(endDate.getMonth() - 3);
+
+const fixtureData = {
+  transaction_success_rate: generateMetricData('transaction_success_rate', startDate, endDate, 98, 0.03),
+  average_transaction_value: generateMetricData('average_transaction_value', startDate, endDate, 100, 0.5),
+  transactions_per_hour: generateMetricData('transactions_per_hour', startDate, endDate, 1000, 0.2, true),
+  authorization_time_ms: generateMetricData('authorization_time_ms', startDate, endDate, 500, 0.6),
+  decline_rate: generateMetricData('decline_rate', startDate, endDate, 3, 0.6),
+  chargeback_rate: generateMetricData('chargeback_rate', startDate, endDate, 0.2, 0.5),
+}
+
+// // Generate payment processing relevant metrics
+// export const fixtureData: MetricData[] = [
+//   // Transaction Success Rate (percentage between 95-100%)
+//   ...generateMetricData('transaction_success_rate', startDate, endDate, 98, 0.03),
+  
+//   // Average Transaction Value (in dollars, varies between $50-150)
+//   ...generateMetricData('average_transaction_value', startDate, endDate, 100, 0.5),
+  
+//   // Transactions Per Hour (integer, varies between 800-1200)
+//   ...generateMetricData('transactions_per_hour', startDate, endDate, 1000, 0.2, true),
+  
+//   // Authorization Time (milliseconds, varies between 200-800ms)
+//   ...generateMetricData('authorization_time_ms', startDate, endDate, 500, 0.6),
+  
+//   // Decline Rate (percentage between 1-5%)
+//   ...generateMetricData('decline_rate', startDate, endDate, 3, 0.6),
+  
+//   // Chargeback Rate (percentage between 0.1-0.3%)
+//   ...generateMetricData('chargeback_rate', startDate, endDate, 0.2, 0.5),
+// ];
+
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+    <div>
+      <Dashboard
+        metrics={fixtureData}
+        timeRange={[new Date(), new Date()]}
+      />
     </div>
   );
 }
