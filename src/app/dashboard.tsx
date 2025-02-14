@@ -7,6 +7,7 @@ import OneDayHourlyHistogramChart from "./charts/one-day-hourly-histogram-chart"
 import { FixtureData } from "./data/fixtures";
 import HistogramChart from "./charts/histogram-chart";
 import OneMonthDailyHistogramChart from "./charts/one-month-daily-histogram-chart";
+import ChargebackHeatmapChart from "./charts/chargeback-heatmap-chart";
 
 interface DashboardProps {
   timeRange: [Date, Date];
@@ -92,7 +93,7 @@ return (
           Chargeback Rate
         </h2>
         <div className="h-[300px]">
-          {/* Chart will go here */}
+        <ChargebackHeatmapChart data={metrics.chargeback_rate} />
         </div>
       </div>
     </div>
