@@ -3,19 +3,24 @@
 import { MetricData } from "@/types/metric-data";
 import { SuccessRateChart } from "./charts/success-rate-chart";
 import { TransactionChart } from "./charts/transaction-chart";
+import OneDayHourlyHistogramChart from "./charts/one-day-hourly-histogram-chart";
+import { FixtureData } from "./data/fixtures";
+import HistogramChart from "./charts/histogram-chart";
+import OneMonthDailyHistogramChart from "./charts/one-month-daily-histogram-chart";
 
 interface DashboardProps {
-  metrics: {[key: string]: MetricData[]};
   timeRange: [Date, Date];
   onTimeRangeChange?: (range: [Date, Date]) => void;
 }
   
-const Dashboard = ({ metrics, timeRange, onTimeRangeChange }: DashboardProps) => {
+const Dashboard = ({ timeRange, onTimeRangeChange }: DashboardProps) => {
 // Implementation exercise: 
 // 1. Create a responsive grid layout
 // 2. Implement efficient rendering of multiple charts
 // 3. Add interactive features like zooming and tooltips
 // 4. Handle loading and error states gracefully
+
+const metrics = FixtureData;
 
 return (
   <div className="p-4 md:p-6 lg:p-8 bg-gray-50 min-h-screen">
@@ -57,7 +62,7 @@ return (
           Transactions Per Hour
         </h2>
         <div className="h-[300px]">
-          {/* Chart will go here */}
+        <OneDayHourlyHistogramChart data={metrics.transactions_per_hour} />
         </div>
       </div>
 
@@ -67,7 +72,7 @@ return (
           Authorization Time
         </h2>
         <div className="h-[300px]">
-          {/* Chart will go here */}
+        <HistogramChart data={metrics.authorization_time_ms} />
         </div>
       </div>
 
@@ -77,7 +82,7 @@ return (
           Decline Rate
         </h2>
         <div className="h-[300px]">
-          {/* Chart will go here */}
+        <OneMonthDailyHistogramChart data={metrics.decline_rate} />
         </div>
       </div>
 
